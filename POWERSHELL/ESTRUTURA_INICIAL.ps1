@@ -16,6 +16,7 @@ $vm_http_rule_name = "ALLOW_HTTP"
 $vm_usr_name = "adminAdmin"
 $vm_pwd_name = "admin!@ADMIN"
 $vm_crypt_pwd = ConvertTo-SecureString $vm_pwd_name -AsPlainText -Force
+$rsv_name = "RSV-BRS"
 
 Write-Host ""
 Write-Host "Este SCRIPT criará a estrutura inicial de uma plataforma cloud no Azure."
@@ -75,6 +76,10 @@ $vm_config = New-AzureRmVMConfig -VMName $vm_name -VMSize $vm_size | Set-AzureRm
 
 Write-Host "Criando VM '${vm_name}'. AGUARDE! "
 $vm = New-AzureRmVM -ResourceGroupName $rg_name -Location $loc_name -VM $vm_config
+
+Write-Host "Criando cofre de recuperação '${rsv_name}'. AGUARDE!"
+$rsv = New-AzureRmRecoveryServicesVault -Name $rsv_name -ResourceGroupName $rg_name -Location $loc_name
+Set-AzureRmRecoveryServicesBackupProperties -Vault $rsv -BackupStorageRedundancy LocallyRedundant
 
 Write-Host "..FINALIZADA CRIAÇÃO DA ESTRUTURA INICIAL DA CLOUD.."
 Write-Host ""
